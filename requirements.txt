@@ -5,3 +5,6 @@ langchain
 chromadb
 langchain_openai
 pydantic
+langchain_community
+langchain_core
+pymupdf

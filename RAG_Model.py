@@ -8,8 +8,11 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain_community.vectorstores import Chroma
 import chromadb
 import uuid
+from dotenv import load_dotenv
 
-os.environ["OPENAI_API_KEY"] = "your-key"
+load_dotenv()
+
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 class Rag_Model:
 
@@ -27,7 +30,7 @@ class Rag_Model:
 
     def file_loader(self, path):
         try:
-            loader = PyMuPDFLoader(path, extract_images=True)
+            loader = PyMuPDFLoader(path)
             return loader.load()
         except Exception as e:
             print(e)
@@ -74,10 +77,10 @@ class Rag_Model:
             PROMPT = PromptTemplate(
                 template=prompt_template, input_variables=["context","question", "chat_history"]
             )
-            chain_type_kwargs = {"prompt": PROMPT}
             self.qa = ConversationalRetrievalChain.from_llm(llm=ChatOpenAI(
                 temperature=0.5,
                 verbose=True,
+                model="gpt-4o",
             ),
                 retriever=self.retriever,
                 chain_type="stuff",
