@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+langchain_huggingface
+langchain
+chromadb
+langchain_openai
+pydantic
