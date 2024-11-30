@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = "sk-proj-5lSghsl91phIO5GDerGCT3BlbkFJqAE76qU7huuNO3BChla8"
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 class Rag_Model:
 
