@@ -1,6 +1,7 @@
 import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader, TextLoader, UnstructuredPowerPointLoader, Docx2txtLoader
+from langchain_community.document_loaders.image import UnstructuredImageLoader
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
@@ -12,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+os.environ["OPENAI_API_KEY"] = "sk-proj-5lSghsl91phIO5GDerGCT3BlbkFJqAE76qU7huuNO3BChla8"
 
 class Rag_Model:
 
@@ -28,10 +29,23 @@ class Rag_Model:
         self.source = None
         self.persistent_client = None
 
-    def file_loader(self, path):
+    def file_loader(self, path,ext):
         try:
-            loader = PyMuPDFLoader(path)
-            return loader.load()
+            if ext == 'pdf':
+                loader = PyMuPDFLoader(path, extract_images=True)
+                return loader.load()
+            elif ext == 'docx':
+                loader = Docx2txtLoader(path)
+                return loader.load()
+            elif ext == 'pptx' or ext == 'ppt':
+                loader = UnstructuredPowerPointLoader(path)
+                return loader.load()
+            elif ext == 'txt':
+                loader = TextLoader(path)
+                return loader.load()
+            elif ext == 'png' or ext == 'jpg' or ext == 'jpeg':
+                loader = UnstructuredImageLoader(path)
+                return loader.load()
         except Exception as e:
             print(e)
             return False

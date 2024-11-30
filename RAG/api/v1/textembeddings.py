@@ -9,7 +9,7 @@ async def textembed(input:InputData):
         model.load_embedings(input.username, input.file_hash)
         return status.HTTP_200_OK
     except:
-        a = model.file_loader(input.file_path)
+        a = model.file_loader(input.file_path, input.file_ext)
         if a is False:
             raise HTTPException(status_code=400, detail="File loading failed. No embedding performed.")
         b = model.text_splitter(a)

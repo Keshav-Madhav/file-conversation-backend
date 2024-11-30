@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class InputData(BaseModel):
+    file_ext: str
     file_path: str
     file_hash: str
     username: str

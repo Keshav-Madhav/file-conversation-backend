@@ -8,3 +8,7 @@ pydantic
 langchain_community
 langchain_core
 pymupdf
+pdfminer
+pdfminer.six
+pi-heif
+unstructured_inference
