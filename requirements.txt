@@ -12,3 +12,5 @@ pdfminer
 pdfminer.six
 pi-heif
 unstructured_inference
+rapidocr-onnxruntime
+docx2txt
