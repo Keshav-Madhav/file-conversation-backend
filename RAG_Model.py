@@ -17,7 +17,7 @@ import os
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = "dgsrgsrgsfgdfg" #os.getenv("OPENAI_API_KEY")
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 class Rag_Model:
 
