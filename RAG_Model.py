@@ -1,6 +1,6 @@
 import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyMuPDFLoader, TextLoader, UnstructuredPowerPointLoader, Docx2txtLoader
+from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -10,10 +10,14 @@ from langchain_community.vectorstores import Chroma
 import chromadb
 import uuid
 from dotenv import load_dotenv
+import requests
+from docx2pdf import convert as pdfconvert
+from pptxtopdf import convert as pptconvert
+import os
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+os.environ["OPENAI_API_KEY"] = "dgsrgsrgsfgdfg" #os.getenv("OPENAI_API_KEY")
 
 class Rag_Model:
 
@@ -35,17 +39,58 @@ class Rag_Model:
                 loader = PyMuPDFLoader(path, extract_images=True)
                 return loader.load()
             elif type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                loader = Docx2txtLoader(path)
-                return loader.load()
+                response = requests.get(path)
+                data = response.text
+                with open(f"temp.docx", "w") as file:
+                    file.write(data)
+                pdfconvert("temp.docx", "temp.pdf")
+                loader = PyMuPDFLoader("temp.pdf", extract_images=True)
+                data = loader.load()
+                os.remove("temp.pdf")
+                os.remove("temp.docx")
+                return data
             elif type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                loader = UnstructuredPowerPointLoader(path)
-                return loader.load()
+                response = requests.get(path)
+                data = response.text
+                with open(f"temp.pptx", "w") as file:
+                    file.write(data)
+                pptconvert("temp.pptx","temp.pdf")
+                loader = PyMuPDFLoader("temp.pdf", extract_images=True)
+                data = loader.load()
+                os.remove("temp.pdf")
+                os.remove("temp.ptx")
+                return data
             elif type == 'text/plain':
-                loader = TextLoader(path)
+                response = requests.get(path)
+                data = response.text
+                with open(f"/temp.txt", "w") as file:
+                    file.write(data)
+                loader = TextLoader(f"temp.txt")
                 return loader.load()
-            elif type == 'image/png' or type == 'image/jpeg':
-                loader = UnstructuredImageLoader(path)
-                return loader.load()
+            elif type == 'image/jpeg':
+                response = requests.get(path)
+                if response.status_code == 200:
+                    with open('temp.jpg', 'wb') as file:
+                        file.write(response.content)
+                    print("Image has been saved successfully.")
+                else:
+                    print("Failed to retrieve the image. Status code:", response.status_code)
+                loader = UnstructuredImageLoader("temp.jpg")
+                data = loader.load()
+                os.remove("temp.jpg")
+                return data
+            elif type == 'image/png':
+                response = requests.get(path)
+                if response.status_code == 200:
+                    with open('temp.png', 'wb') as file:
+                        file.write(response.content)
+                    print("Image has been saved successfully.")
+                else:
+                    print("Failed to retrieve the image. Status code:", response.status_code)
+                loader = UnstructuredImageLoader("temp.jpg")
+                data = loader.load()
+                os.remove("temp.png")
+                return data
         except Exception as e:
             print(e)
             return False

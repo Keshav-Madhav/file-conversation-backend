@@ -14,3 +14,5 @@ pi-heif
 unstructured_inference
 rapidocr-onnxruntime
 docx2txt
+docx2pdf
+pptxtopdf
