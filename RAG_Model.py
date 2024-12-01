@@ -29,21 +29,21 @@ class Rag_Model:
         self.source = None
         self.persistent_client = None
 
-    def file_loader(self, path,ext):
+    def file_loader(self, path, type):
         try:
-            if ext == 'pdf':
+            if type == 'application/pdf':
                 loader = PyMuPDFLoader(path, extract_images=True)
                 return loader.load()
-            elif ext == 'docx':
+            elif type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                 loader = Docx2txtLoader(path)
                 return loader.load()
-            elif ext == 'pptx' or ext == 'ppt':
+            elif type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                 loader = UnstructuredPowerPointLoader(path)
                 return loader.load()
-            elif ext == 'txt':
+            elif type == 'text/plain':
                 loader = TextLoader(path)
                 return loader.load()
-            elif ext == 'png' or ext == 'jpg' or ext == 'jpeg':
+            elif type == 'image/png' or type == 'image/jpeg':
                 loader = UnstructuredImageLoader(path)
                 return loader.load()
         except Exception as e:
