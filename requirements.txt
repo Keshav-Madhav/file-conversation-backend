@@ -16,3 +16,4 @@ rapidocr-onnxruntime
 docx2txt
 docx2pdf
 pptxtopdf
+pytesseract
